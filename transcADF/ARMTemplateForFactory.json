@@ -1,0 +1,1419 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "transcADF"
+		},
+		"Pipe1_databricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Pipe1_databricks'"
+		},
+		"pipe_transcPipeWrskp_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'pipe_transcPipeWrskp'"
+		},
+		"pipe_transcstorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'pipe_transcstorage'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyDataActivity",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "pipe1_source",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "pipe1_sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-11-06T18:39:31Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/pipe1_source')]",
+				"[concat(variables('factoryId'), '/datasets/pipe1_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continueOnError": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-10-23T20:18:58Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/coursera_pbp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pipe_transcstorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "pbp_ftn_az.csv",
+						"container": "coursera"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Prop_0",
+						"type": "String"
+					},
+					{
+						"name": "Unnamed: 0",
+						"type": "String"
+					},
+					{
+						"name": "game_id",
+						"type": "String"
+					},
+					{
+						"name": "week",
+						"type": "String"
+					},
+					{
+						"name": "season",
+						"type": "String"
+					},
+					{
+						"name": "matchup",
+						"type": "String"
+					},
+					{
+						"name": "pcount",
+						"type": "String"
+					},
+					{
+						"name": "team",
+						"type": "String"
+					},
+					{
+						"name": "opponent",
+						"type": "String"
+					},
+					{
+						"name": "venue",
+						"type": "String"
+					},
+					{
+						"name": "vegas_wp",
+						"type": "String"
+					},
+					{
+						"name": "vegas_wpa",
+						"type": "String"
+					},
+					{
+						"name": "away_team",
+						"type": "String"
+					},
+					{
+						"name": "home_team",
+						"type": "String"
+					},
+					{
+						"name": "scorep",
+						"type": "String"
+					},
+					{
+						"name": "end_q1",
+						"type": "String"
+					},
+					{
+						"name": "end_q2",
+						"type": "String"
+					},
+					{
+						"name": "end_q3",
+						"type": "String"
+					},
+					{
+						"name": "end_q4",
+						"type": "String"
+					},
+					{
+						"name": "yards_gained",
+						"type": "String"
+					},
+					{
+						"name": "yards_allowed",
+						"type": "String"
+					},
+					{
+						"name": "tw",
+						"type": "String"
+					},
+					{
+						"name": "d_tw",
+						"type": "String"
+					},
+					{
+						"name": "4att",
+						"type": "String"
+					},
+					{
+						"name": "off_inred",
+						"type": "String"
+					},
+					{
+						"name": "missed_ksize",
+						"type": "String"
+					},
+					{
+						"name": "drive_start",
+						"type": "String"
+					},
+					{
+						"name": "points_scored",
+						"type": "String"
+					},
+					{
+						"name": "points_allowed",
+						"type": "String"
+					},
+					{
+						"name": "min_passed",
+						"type": "String"
+					},
+					{
+						"name": "in_pos",
+						"type": "String"
+					},
+					{
+						"name": "yrdln",
+						"type": "String"
+					},
+					{
+						"name": "play_type",
+						"type": "String"
+					},
+					{
+						"name": "rush_yards",
+						"type": "String"
+					},
+					{
+						"name": "d_rush_yards",
+						"type": "String"
+					},
+					{
+						"name": "pass_yards",
+						"type": "String"
+					},
+					{
+						"name": "d_pass_yards",
+						"type": "String"
+					},
+					{
+						"name": "pressures",
+						"type": "String"
+					},
+					{
+						"name": "d_pressures",
+						"type": "String"
+					},
+					{
+						"name": "down",
+						"type": "String"
+					},
+					{
+						"name": "turnover",
+						"type": "String"
+					},
+					{
+						"name": "off_n_offense_backfield",
+						"type": "String"
+					},
+					{
+						"name": "d_n_offense_backfield",
+						"type": "String"
+					},
+					{
+						"name": "off_n_defense_box",
+						"type": "String"
+					},
+					{
+						"name": "d_n_defense_box",
+						"type": "String"
+					},
+					{
+						"name": "off_is_no_huddle",
+						"type": "String"
+					},
+					{
+						"name": "d_is_no_huddle",
+						"type": "String"
+					},
+					{
+						"name": "off_is_motion",
+						"type": "String"
+					},
+					{
+						"name": "d_is_motion",
+						"type": "String"
+					},
+					{
+						"name": "off_is_play_action",
+						"type": "String"
+					},
+					{
+						"name": "d_is_play_action",
+						"type": "String"
+					},
+					{
+						"name": "off_is_screen_pass",
+						"type": "String"
+					},
+					{
+						"name": "d_is_screen_pass",
+						"type": "String"
+					},
+					{
+						"name": "off_is_rpo",
+						"type": "String"
+					},
+					{
+						"name": "d_is_rpo",
+						"type": "String"
+					},
+					{
+						"name": "off_is_trick_play",
+						"type": "String"
+					},
+					{
+						"name": "d_is_trick_play",
+						"type": "String"
+					},
+					{
+						"name": "off_is_qb_out_of_pocket",
+						"type": "String"
+					},
+					{
+						"name": "d_is_qb_out_of_pocket",
+						"type": "String"
+					},
+					{
+						"name": "off_is_interception_worthy",
+						"type": "String"
+					},
+					{
+						"name": "d_is_interception_worthy",
+						"type": "String"
+					},
+					{
+						"name": "off_is_throw_away",
+						"type": "String"
+					},
+					{
+						"name": "d_is_throw_away",
+						"type": "String"
+					},
+					{
+						"name": "off_read_thrown",
+						"type": "String"
+					},
+					{
+						"name": "d_read_thrown",
+						"type": "String"
+					},
+					{
+						"name": "off_is_catchable_ball",
+						"type": "String"
+					},
+					{
+						"name": "d_is_catchable_ball",
+						"type": "String"
+					},
+					{
+						"name": "off_is_contested_ball",
+						"type": "String"
+					},
+					{
+						"name": "d_is_contested_ball",
+						"type": "String"
+					},
+					{
+						"name": "off_is_created_reception",
+						"type": "String"
+					},
+					{
+						"name": "d_is_created_reception",
+						"type": "String"
+					},
+					{
+						"name": "off_is_drop",
+						"type": "String"
+					},
+					{
+						"name": "d_is_drop",
+						"type": "String"
+					},
+					{
+						"name": "off_n_blitzers",
+						"type": "String"
+					},
+					{
+						"name": "d_n_blitzers",
+						"type": "String"
+					},
+					{
+						"name": "off_n_pass_rushers",
+						"type": "String"
+					},
+					{
+						"name": "d_n_pass_rushers",
+						"type": "String"
+					},
+					{
+						"name": "off_is_qb_fault_sack",
+						"type": "String"
+					},
+					{
+						"name": "d_is_qb_fault_sack",
+						"type": "String"
+					},
+					{
+						"name": "turnover.1",
+						"type": "String"
+					},
+					{
+						"name": "d_turnover",
+						"type": "String"
+					},
+					{
+						"name": "run",
+						"type": "String"
+					},
+					{
+						"name": "pass",
+						"type": "String"
+					},
+					{
+						"name": "field_goal",
+						"type": "String"
+					},
+					{
+						"name": "punt",
+						"type": "String"
+					},
+					{
+						"name": "punt_dist",
+						"type": "String"
+					},
+					{
+						"name": "fg_rate",
+						"type": "String"
+					},
+					{
+						"name": "pat_rate",
+						"type": "String"
+					},
+					{
+						"name": "off2",
+						"type": "String"
+					},
+					{
+						"name": "d_off2",
+						"type": "String"
+					},
+					{
+						"name": "fg_blocked",
+						"type": "String"
+					},
+					{
+						"name": "d_fg_blocked",
+						"type": "String"
+					},
+					{
+						"name": "punt_blocked",
+						"type": "String"
+					},
+					{
+						"name": "d_punt_blocked",
+						"type": "String"
+					},
+					{
+						"name": "ryard",
+						"type": "String"
+					},
+					{
+						"name": "d_ryard",
+						"type": "String"
+					},
+					{
+						"name": "pos",
+						"type": "String"
+					},
+					{
+						"name": "d_pos",
+						"type": "String"
+					},
+					{
+						"name": "won",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pipe_transcstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/coursera_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pipe_transcstorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "processed.csv",
+						"container": "coursera-stage"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pipe_transcstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe1_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pipe_transcstorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "empty.csv",
+						"container": "pipe1-container"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Prop_0",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pipe_transcstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe1_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pipe_transcstorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "pbp_ftn_az.csv",
+						"container": "pipe1-container"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Prop_0",
+						"type": "String"
+					},
+					{
+						"name": "Unnamed: 0",
+						"type": "String"
+					},
+					{
+						"name": "game_id",
+						"type": "String"
+					},
+					{
+						"name": "week",
+						"type": "String"
+					},
+					{
+						"name": "season",
+						"type": "String"
+					},
+					{
+						"name": "matchup",
+						"type": "String"
+					},
+					{
+						"name": "pcount",
+						"type": "String"
+					},
+					{
+						"name": "team",
+						"type": "String"
+					},
+					{
+						"name": "opponent",
+						"type": "String"
+					},
+					{
+						"name": "venue",
+						"type": "String"
+					},
+					{
+						"name": "vegas_wp",
+						"type": "String"
+					},
+					{
+						"name": "vegas_wpa",
+						"type": "String"
+					},
+					{
+						"name": "away_team",
+						"type": "String"
+					},
+					{
+						"name": "home_team",
+						"type": "String"
+					},
+					{
+						"name": "scorep",
+						"type": "String"
+					},
+					{
+						"name": "end_q1",
+						"type": "String"
+					},
+					{
+						"name": "end_q2",
+						"type": "String"
+					},
+					{
+						"name": "end_q3",
+						"type": "String"
+					},
+					{
+						"name": "end_q4",
+						"type": "String"
+					},
+					{
+						"name": "yards_gained",
+						"type": "String"
+					},
+					{
+						"name": "yards_allowed",
+						"type": "String"
+					},
+					{
+						"name": "tw",
+						"type": "String"
+					},
+					{
+						"name": "d_tw",
+						"type": "String"
+					},
+					{
+						"name": "4att",
+						"type": "String"
+					},
+					{
+						"name": "off_inred",
+						"type": "String"
+					},
+					{
+						"name": "missed_ksize",
+						"type": "String"
+					},
+					{
+						"name": "drive_start",
+						"type": "String"
+					},
+					{
+						"name": "points_scored",
+						"type": "String"
+					},
+					{
+						"name": "points_allowed",
+						"type": "String"
+					},
+					{
+						"name": "min_passed",
+						"type": "String"
+					},
+					{
+						"name": "in_pos",
+						"type": "String"
+					},
+					{
+						"name": "yrdln",
+						"type": "String"
+					},
+					{
+						"name": "play_type",
+						"type": "String"
+					},
+					{
+						"name": "rush_yards",
+						"type": "String"
+					},
+					{
+						"name": "d_rush_yards",
+						"type": "String"
+					},
+					{
+						"name": "pass_yards",
+						"type": "String"
+					},
+					{
+						"name": "d_pass_yards",
+						"type": "String"
+					},
+					{
+						"name": "pressures",
+						"type": "String"
+					},
+					{
+						"name": "d_pressures",
+						"type": "String"
+					},
+					{
+						"name": "down",
+						"type": "String"
+					},
+					{
+						"name": "turnover",
+						"type": "String"
+					},
+					{
+						"name": "off_n_offense_backfield",
+						"type": "String"
+					},
+					{
+						"name": "d_n_offense_backfield",
+						"type": "String"
+					},
+					{
+						"name": "off_n_defense_box",
+						"type": "String"
+					},
+					{
+						"name": "d_n_defense_box",
+						"type": "String"
+					},
+					{
+						"name": "off_is_no_huddle",
+						"type": "String"
+					},
+					{
+						"name": "d_is_no_huddle",
+						"type": "String"
+					},
+					{
+						"name": "off_is_motion",
+						"type": "String"
+					},
+					{
+						"name": "d_is_motion",
+						"type": "String"
+					},
+					{
+						"name": "off_is_play_action",
+						"type": "String"
+					},
+					{
+						"name": "d_is_play_action",
+						"type": "String"
+					},
+					{
+						"name": "off_is_screen_pass",
+						"type": "String"
+					},
+					{
+						"name": "d_is_screen_pass",
+						"type": "String"
+					},
+					{
+						"name": "off_is_rpo",
+						"type": "String"
+					},
+					{
+						"name": "d_is_rpo",
+						"type": "String"
+					},
+					{
+						"name": "off_is_trick_play",
+						"type": "String"
+					},
+					{
+						"name": "d_is_trick_play",
+						"type": "String"
+					},
+					{
+						"name": "off_is_qb_out_of_pocket",
+						"type": "String"
+					},
+					{
+						"name": "d_is_qb_out_of_pocket",
+						"type": "String"
+					},
+					{
+						"name": "off_is_interception_worthy",
+						"type": "String"
+					},
+					{
+						"name": "d_is_interception_worthy",
+						"type": "String"
+					},
+					{
+						"name": "off_is_throw_away",
+						"type": "String"
+					},
+					{
+						"name": "d_is_throw_away",
+						"type": "String"
+					},
+					{
+						"name": "off_read_thrown",
+						"type": "String"
+					},
+					{
+						"name": "d_read_thrown",
+						"type": "String"
+					},
+					{
+						"name": "off_is_catchable_ball",
+						"type": "String"
+					},
+					{
+						"name": "d_is_catchable_ball",
+						"type": "String"
+					},
+					{
+						"name": "off_is_contested_ball",
+						"type": "String"
+					},
+					{
+						"name": "d_is_contested_ball",
+						"type": "String"
+					},
+					{
+						"name": "off_is_created_reception",
+						"type": "String"
+					},
+					{
+						"name": "d_is_created_reception",
+						"type": "String"
+					},
+					{
+						"name": "off_is_drop",
+						"type": "String"
+					},
+					{
+						"name": "d_is_drop",
+						"type": "String"
+					},
+					{
+						"name": "off_n_blitzers",
+						"type": "String"
+					},
+					{
+						"name": "d_n_blitzers",
+						"type": "String"
+					},
+					{
+						"name": "off_n_pass_rushers",
+						"type": "String"
+					},
+					{
+						"name": "d_n_pass_rushers",
+						"type": "String"
+					},
+					{
+						"name": "off_is_qb_fault_sack",
+						"type": "String"
+					},
+					{
+						"name": "d_is_qb_fault_sack",
+						"type": "String"
+					},
+					{
+						"name": "turnover.1",
+						"type": "String"
+					},
+					{
+						"name": "d_turnover",
+						"type": "String"
+					},
+					{
+						"name": "run",
+						"type": "String"
+					},
+					{
+						"name": "pass",
+						"type": "String"
+					},
+					{
+						"name": "field_goal",
+						"type": "String"
+					},
+					{
+						"name": "punt",
+						"type": "String"
+					},
+					{
+						"name": "punt_dist",
+						"type": "String"
+					},
+					{
+						"name": "fg_rate",
+						"type": "String"
+					},
+					{
+						"name": "pat_rate",
+						"type": "String"
+					},
+					{
+						"name": "off2",
+						"type": "String"
+					},
+					{
+						"name": "d_off2",
+						"type": "String"
+					},
+					{
+						"name": "fg_blocked",
+						"type": "String"
+					},
+					{
+						"name": "d_fg_blocked",
+						"type": "String"
+					},
+					{
+						"name": "punt_blocked",
+						"type": "String"
+					},
+					{
+						"name": "d_punt_blocked",
+						"type": "String"
+					},
+					{
+						"name": "ryard",
+						"type": "String"
+					},
+					{
+						"name": "d_ryard",
+						"type": "String"
+					},
+					{
+						"name": "pos",
+						"type": "String"
+					},
+					{
+						"name": "d_pos",
+						"type": "String"
+					},
+					{
+						"name": "won",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pipe_transcstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe1_stage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pipe_transcstorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "stage.csv",
+						"container": "pipe1-container"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pipe_transcstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipe1_databricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricksDeltaLake",
+				"typeProperties": {
+					"domain": "https://adb-1410338595309157.17.azuredatabricks.net",
+					"clusterId": "1018-165619-tks2bx8s",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('Pipe1_databricks_accessToken')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe_transcPipeWrskp')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricksDeltaLake",
+				"typeProperties": {
+					"domain": "https://adb-1410338595309157.17.azuredatabricks.net",
+					"clusterId": "1018-165619-tks2bx8s",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('pipe_transcPipeWrskp_accessToken')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipe_transcstorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('pipe_transcstorage_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/az-integ-rt')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "Central US",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false,
+							"customProperties": []
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "coursera_pbp",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "coursera_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "window1"
+						},
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Prop_0 as string,",
+						"          {Unnamed: 0} as string,",
+						"          game_id as string,",
+						"          week as string,",
+						"          season as string,",
+						"          matchup as string,",
+						"          pcount as string,",
+						"          team as string,",
+						"          opponent as string,",
+						"          venue as string,",
+						"          vegas_wp as string,",
+						"          vegas_wpa as string,",
+						"          away_team as string,",
+						"          home_team as string,",
+						"          scorep as string,",
+						"          end_q1 as string,",
+						"          end_q2 as string,",
+						"          end_q3 as string,",
+						"          end_q4 as string,",
+						"          yards_gained as string,",
+						"          yards_allowed as string,",
+						"          tw as string,",
+						"          d_tw as string,",
+						"          {4att} as string,",
+						"          off_inred as string,",
+						"          missed_ksize as string,",
+						"          drive_start as string,",
+						"          points_scored as string,",
+						"          points_allowed as string,",
+						"          min_passed as string,",
+						"          in_pos as string,",
+						"          yrdln as string,",
+						"          play_type as string,",
+						"          rush_yards as string,",
+						"          d_rush_yards as string,",
+						"          pass_yards as string,",
+						"          d_pass_yards as string,",
+						"          pressures as string,",
+						"          d_pressures as string,",
+						"          down as string,",
+						"          turnover as string,",
+						"          off_n_offense_backfield as string,",
+						"          d_n_offense_backfield as string,",
+						"          off_n_defense_box as string,",
+						"          d_n_defense_box as string,",
+						"          off_is_no_huddle as string,",
+						"          d_is_no_huddle as string,",
+						"          off_is_motion as string,",
+						"          d_is_motion as string,",
+						"          off_is_play_action as string,",
+						"          d_is_play_action as string,",
+						"          off_is_screen_pass as string,",
+						"          d_is_screen_pass as string,",
+						"          off_is_rpo as string,",
+						"          d_is_rpo as string,",
+						"          off_is_trick_play as string,",
+						"          d_is_trick_play as string,",
+						"          off_is_qb_out_of_pocket as string,",
+						"          d_is_qb_out_of_pocket as string,",
+						"          off_is_interception_worthy as string,",
+						"          d_is_interception_worthy as string,",
+						"          off_is_throw_away as string,",
+						"          d_is_throw_away as string,",
+						"          off_read_thrown as string,",
+						"          d_read_thrown as string,",
+						"          off_is_catchable_ball as string,",
+						"          d_is_catchable_ball as string,",
+						"          off_is_contested_ball as string,",
+						"          d_is_contested_ball as string,",
+						"          off_is_created_reception as string,",
+						"          d_is_created_reception as string,",
+						"          off_is_drop as string,",
+						"          d_is_drop as string,",
+						"          off_n_blitzers as string,",
+						"          d_n_blitzers as string,",
+						"          off_n_pass_rushers as string,",
+						"          d_n_pass_rushers as string,",
+						"          off_is_qb_fault_sack as string,",
+						"          d_is_qb_fault_sack as string,",
+						"          {turnover.1} as string,",
+						"          d_turnover as string,",
+						"          run as string,",
+						"          pass as string,",
+						"          field_goal as string,",
+						"          punt as string,",
+						"          punt_dist as string,",
+						"          fg_rate as string,",
+						"          pat_rate as string,",
+						"          off2 as string,",
+						"          d_off2 as string,",
+						"          fg_blocked as string,",
+						"          d_fg_blocked as string,",
+						"          punt_blocked as string,",
+						"          d_punt_blocked as string,",
+						"          ryard as string,",
+						"          d_ryard as string,",
+						"          pos as string,",
+						"          d_pos as string,",
+						"          won as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          game_id,",
+						"          week_of_season = week,",
+						"          season,",
+						"          matchup,",
+						"          pcount,",
+						"          team,",
+						"          opponent,",
+						"          venue,",
+						"          vegas_wp,",
+						"          vegas_wpa,",
+						"          away_team,",
+						"          home_team,",
+						"          scorep,",
+						"          end_q1,",
+						"          end_q2,",
+						"          end_q3,",
+						"          end_q4,",
+						"          yards_gained,",
+						"          yards_allowed,",
+						"          tw,",
+						"          d_tw,",
+						"          {4att},",
+						"          off_inred,",
+						"          missed_ksize,",
+						"          drive_start,",
+						"          points_scored,",
+						"          points_allowed,",
+						"          min_passed,",
+						"          in_pos,",
+						"          yrdln,",
+						"          play_type,",
+						"          rush_yards,",
+						"          d_rush_yards,",
+						"          pass_yards,",
+						"          d_pass_yards,",
+						"          pressures,",
+						"          d_pressures,",
+						"          down,",
+						"          turnover,",
+						"          off_n_offense_backfield,",
+						"          d_n_offense_backfield,",
+						"          off_n_defense_box,",
+						"          d_n_defense_box,",
+						"          off_is_no_huddle,",
+						"          d_is_no_huddle,",
+						"          off_is_motion,",
+						"          d_is_motion,",
+						"          off_is_play_action,",
+						"          d_is_play_action,",
+						"          off_is_screen_pass,",
+						"          d_is_screen_pass,",
+						"          off_is_rpo,",
+						"          d_is_rpo,",
+						"          off_is_trick_play,",
+						"          d_is_trick_play,",
+						"          off_is_qb_out_of_pocket,",
+						"          d_is_qb_out_of_pocket,",
+						"          off_is_interception_worthy,",
+						"          d_is_interception_worthy,",
+						"          off_is_throw_away,",
+						"          d_is_throw_away,",
+						"          off_read_thrown,",
+						"          d_read_thrown,",
+						"          off_is_catchable_ball,",
+						"          d_is_catchable_ball,",
+						"          off_is_contested_ball,",
+						"          d_is_contested_ball,",
+						"          off_is_created_reception,",
+						"          d_is_created_reception,",
+						"          off_is_drop,",
+						"          d_is_drop,",
+						"          off_n_blitzers,",
+						"          d_n_blitzers,",
+						"          off_n_pass_rushers,",
+						"          d_n_pass_rushers,",
+						"          off_is_qb_fault_sack,",
+						"          d_is_qb_fault_sack,",
+						"          {1} = {turnover.1},",
+						"          d_turnover,",
+						"          run,",
+						"          pass,",
+						"          field_goal,",
+						"          punt,",
+						"          punt_dist,",
+						"          fg_rate,",
+						"          pat_rate,",
+						"          off2,",
+						"          d_off2,",
+						"          fg_blocked,",
+						"          d_fg_blocked,",
+						"          punt_blocked,",
+						"          d_punt_blocked,",
+						"          ryard,",
+						"          d_ryard,",
+						"          pos,",
+						"          d_pos,",
+						"          won",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 filter(toInteger(week_of_season) >= 1) ~> filter1",
+						"filter1 window(over(week_of_season,",
+						"          game_id),",
+						"     desc(yards_gained, true),",
+						"     yg_rank = sum(toInteger(yards_gained))) ~> window1",
+						"window1 aggregate(groupBy(week_of_season,",
+						"          game_id),",
+						"     first_play = first(play_type),",
+						"          last_play = last(play_type),",
+						"          play_count = count(game_id),",
+						"          avg_yards = avg(toInteger(yards_gained))) ~> aggregate1",
+						"aggregate1 alterRow(upsertIf(true())) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/coursera_pbp')]",
+				"[concat(variables('factoryId'), '/datasets/coursera_sink')]"
+			]
+		}
+	]
+}

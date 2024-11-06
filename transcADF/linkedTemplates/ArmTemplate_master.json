@@ -1,0 +1,63 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "transcADF"
+		},
+		"Pipe1_databricks_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Pipe1_databricks'"
+		},
+		"pipe_transcPipeWrskp_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'pipe_transcPipeWrskp'"
+		},
+		"pipe_transcstorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'pipe_transcstorage'"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "transcADF_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Pipe1_databricks_accessToken": {
+						"value": "[parameters('Pipe1_databricks_accessToken')]"
+					},
+					"pipe_transcPipeWrskp_accessToken": {
+						"value": "[parameters('pipe_transcPipeWrskp_accessToken')]"
+					},
+					"pipe_transcstorage_connectionString": {
+						"value": "[parameters('pipe_transcstorage_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
