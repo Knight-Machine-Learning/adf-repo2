@@ -1,0 +1,421 @@
+{
+	"name": "pipe1_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "pipe_transcstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "pbp_ftn_az.csv",
+				"container": "pipe1-container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Prop_0",
+				"type": "String"
+			},
+			{
+				"name": "Unnamed: 0",
+				"type": "String"
+			},
+			{
+				"name": "game_id",
+				"type": "String"
+			},
+			{
+				"name": "week",
+				"type": "String"
+			},
+			{
+				"name": "season",
+				"type": "String"
+			},
+			{
+				"name": "matchup",
+				"type": "String"
+			},
+			{
+				"name": "pcount",
+				"type": "String"
+			},
+			{
+				"name": "team",
+				"type": "String"
+			},
+			{
+				"name": "opponent",
+				"type": "String"
+			},
+			{
+				"name": "venue",
+				"type": "String"
+			},
+			{
+				"name": "vegas_wp",
+				"type": "String"
+			},
+			{
+				"name": "vegas_wpa",
+				"type": "String"
+			},
+			{
+				"name": "away_team",
+				"type": "String"
+			},
+			{
+				"name": "home_team",
+				"type": "String"
+			},
+			{
+				"name": "scorep",
+				"type": "String"
+			},
+			{
+				"name": "end_q1",
+				"type": "String"
+			},
+			{
+				"name": "end_q2",
+				"type": "String"
+			},
+			{
+				"name": "end_q3",
+				"type": "String"
+			},
+			{
+				"name": "end_q4",
+				"type": "String"
+			},
+			{
+				"name": "yards_gained",
+				"type": "String"
+			},
+			{
+				"name": "yards_allowed",
+				"type": "String"
+			},
+			{
+				"name": "tw",
+				"type": "String"
+			},
+			{
+				"name": "d_tw",
+				"type": "String"
+			},
+			{
+				"name": "4att",
+				"type": "String"
+			},
+			{
+				"name": "off_inred",
+				"type": "String"
+			},
+			{
+				"name": "missed_ksize",
+				"type": "String"
+			},
+			{
+				"name": "drive_start",
+				"type": "String"
+			},
+			{
+				"name": "points_scored",
+				"type": "String"
+			},
+			{
+				"name": "points_allowed",
+				"type": "String"
+			},
+			{
+				"name": "min_passed",
+				"type": "String"
+			},
+			{
+				"name": "in_pos",
+				"type": "String"
+			},
+			{
+				"name": "yrdln",
+				"type": "String"
+			},
+			{
+				"name": "play_type",
+				"type": "String"
+			},
+			{
+				"name": "rush_yards",
+				"type": "String"
+			},
+			{
+				"name": "d_rush_yards",
+				"type": "String"
+			},
+			{
+				"name": "pass_yards",
+				"type": "String"
+			},
+			{
+				"name": "d_pass_yards",
+				"type": "String"
+			},
+			{
+				"name": "pressures",
+				"type": "String"
+			},
+			{
+				"name": "d_pressures",
+				"type": "String"
+			},
+			{
+				"name": "down",
+				"type": "String"
+			},
+			{
+				"name": "turnover",
+				"type": "String"
+			},
+			{
+				"name": "off_n_offense_backfield",
+				"type": "String"
+			},
+			{
+				"name": "d_n_offense_backfield",
+				"type": "String"
+			},
+			{
+				"name": "off_n_defense_box",
+				"type": "String"
+			},
+			{
+				"name": "d_n_defense_box",
+				"type": "String"
+			},
+			{
+				"name": "off_is_no_huddle",
+				"type": "String"
+			},
+			{
+				"name": "d_is_no_huddle",
+				"type": "String"
+			},
+			{
+				"name": "off_is_motion",
+				"type": "String"
+			},
+			{
+				"name": "d_is_motion",
+				"type": "String"
+			},
+			{
+				"name": "off_is_play_action",
+				"type": "String"
+			},
+			{
+				"name": "d_is_play_action",
+				"type": "String"
+			},
+			{
+				"name": "off_is_screen_pass",
+				"type": "String"
+			},
+			{
+				"name": "d_is_screen_pass",
+				"type": "String"
+			},
+			{
+				"name": "off_is_rpo",
+				"type": "String"
+			},
+			{
+				"name": "d_is_rpo",
+				"type": "String"
+			},
+			{
+				"name": "off_is_trick_play",
+				"type": "String"
+			},
+			{
+				"name": "d_is_trick_play",
+				"type": "String"
+			},
+			{
+				"name": "off_is_qb_out_of_pocket",
+				"type": "String"
+			},
+			{
+				"name": "d_is_qb_out_of_pocket",
+				"type": "String"
+			},
+			{
+				"name": "off_is_interception_worthy",
+				"type": "String"
+			},
+			{
+				"name": "d_is_interception_worthy",
+				"type": "String"
+			},
+			{
+				"name": "off_is_throw_away",
+				"type": "String"
+			},
+			{
+				"name": "d_is_throw_away",
+				"type": "String"
+			},
+			{
+				"name": "off_read_thrown",
+				"type": "String"
+			},
+			{
+				"name": "d_read_thrown",
+				"type": "String"
+			},
+			{
+				"name": "off_is_catchable_ball",
+				"type": "String"
+			},
+			{
+				"name": "d_is_catchable_ball",
+				"type": "String"
+			},
+			{
+				"name": "off_is_contested_ball",
+				"type": "String"
+			},
+			{
+				"name": "d_is_contested_ball",
+				"type": "String"
+			},
+			{
+				"name": "off_is_created_reception",
+				"type": "String"
+			},
+			{
+				"name": "d_is_created_reception",
+				"type": "String"
+			},
+			{
+				"name": "off_is_drop",
+				"type": "String"
+			},
+			{
+				"name": "d_is_drop",
+				"type": "String"
+			},
+			{
+				"name": "off_n_blitzers",
+				"type": "String"
+			},
+			{
+				"name": "d_n_blitzers",
+				"type": "String"
+			},
+			{
+				"name": "off_n_pass_rushers",
+				"type": "String"
+			},
+			{
+				"name": "d_n_pass_rushers",
+				"type": "String"
+			},
+			{
+				"name": "off_is_qb_fault_sack",
+				"type": "String"
+			},
+			{
+				"name": "d_is_qb_fault_sack",
+				"type": "String"
+			},
+			{
+				"name": "turnover.1",
+				"type": "String"
+			},
+			{
+				"name": "d_turnover",
+				"type": "String"
+			},
+			{
+				"name": "run",
+				"type": "String"
+			},
+			{
+				"name": "pass",
+				"type": "String"
+			},
+			{
+				"name": "field_goal",
+				"type": "String"
+			},
+			{
+				"name": "punt",
+				"type": "String"
+			},
+			{
+				"name": "punt_dist",
+				"type": "String"
+			},
+			{
+				"name": "fg_rate",
+				"type": "String"
+			},
+			{
+				"name": "pat_rate",
+				"type": "String"
+			},
+			{
+				"name": "off2",
+				"type": "String"
+			},
+			{
+				"name": "d_off2",
+				"type": "String"
+			},
+			{
+				"name": "fg_blocked",
+				"type": "String"
+			},
+			{
+				"name": "d_fg_blocked",
+				"type": "String"
+			},
+			{
+				"name": "punt_blocked",
+				"type": "String"
+			},
+			{
+				"name": "d_punt_blocked",
+				"type": "String"
+			},
+			{
+				"name": "ryard",
+				"type": "String"
+			},
+			{
+				"name": "d_ryard",
+				"type": "String"
+			},
+			{
+				"name": "pos",
+				"type": "String"
+			},
+			{
+				"name": "d_pos",
+				"type": "String"
+			},
+			{
+				"name": "won",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

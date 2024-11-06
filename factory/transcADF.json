@@ -1,0 +1,9 @@
+{
+	"name": "transcADF",
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e68ac17a-8721-4897-9cff-e7b042ffc3fb",
+		"tenantId": "23515640-d192-40f6-8b30-2fa1681e6459"
+	}
+}
